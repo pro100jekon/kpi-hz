@@ -10,8 +10,8 @@ or use IDE (i.e. IntelliJ IDEA) which has all bundled inside**
 `docker compose up -d`
 
 # How to use
-After cluster is launched, simply make some requests to fill the data map.
+`curl http://localhost:8081/random[?count=5000]` - performs `[count]` or 10000 increments on a random Hazelcast node 
 
-`curl -X POST http://localhost:8081/test/value`
+`curl http://localhost:8081` - gets current counter value
 
-`curl http://localhost:8082/test`
+`curl http://localhost:8081/increment` - manually increment counter by 1
