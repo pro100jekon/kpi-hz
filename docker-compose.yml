@@ -1,0 +1,98 @@
+version: "3.8"
+services:
+  psql:
+    image: "postgres:latest"
+    container_name: "database"
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+  hz1:
+    build:
+      context: ./
+    image: hazelcastinstance
+    depends_on:
+      psql:
+        condition: service_healthy
+    container_name: hz-1
+    environment:
+      INSTANCES: hz-2,hz-3,hz-4,hz-5,hz-6,hz-7,hz-8,hz-9,hz-10
+  hz2:
+    image: hazelcastinstance
+    depends_on:
+      psql:
+        condition: service_healthy
+    container_name: hz-2
+    environment:
+      INSTANCES: hz-1,hz-3,hz-4,hz-5,hz-6,hz-7,hz-8,hz-9,hz-10
+  hz3:
+    image: hazelcastinstance
+    depends_on:
+      psql:
+        condition: service_healthy
+    container_name: hz-3
+    environment:
+      INSTANCES: hz-1,hz-2,hz-4,hz-5,hz-6,hz-7,hz-8,hz-9,hz-10
+  hz4:
+    image: hazelcastinstance
+    depends_on:
+      psql:
+        condition: service_healthy
+    container_name: hz-4
+    environment:
+      INSTANCES: hz-1,hz-2,hz-3,hz-5,hz-6,hz-7,hz-8,hz-9,hz-10
+  hz5:
+    image: hazelcastinstance
+    depends_on:
+      psql:
+        condition: service_healthy
+    container_name: hz-5
+    environment:
+      INSTANCES: hz-1,hz-2,hz-3,hz-4,hz-6,hz-7,hz-8,hz-9,hz-10
+  hz6:
+    image: hazelcastinstance
+    depends_on:
+      psql:
+        condition: service_healthy
+    container_name: hz-6
+    environment:
+      INSTANCES: hz-1,hz-2,hz-3,hz-4,hz-5,hz-7,hz-8,hz-9,hz-10
+  hz7:
+    image: hazelcastinstance
+    depends_on:
+      psql:
+        condition: service_healthy
+    container_name: hz-7
+    environment:
+      INSTANCES: hz-1,hz-2,hz-3,hz-4,hz-5,hz-6,hz-8,hz-9,hz-10
+  hz8:
+    image: hazelcastinstance
+    depends_on:
+      psql:
+        condition: service_healthy
+    container_name: hz-8
+    environment:
+      INSTANCES: hz-1,hz-2,hz-3,hz-4,hz-5,hz-6,hz-7,hz-9,hz-10
+  hz9:
+    image: hazelcastinstance
+    depends_on:
+      psql:
+        condition: service_healthy
+    container_name: hz-9
+    environment:
+      INSTANCES: hz-1,hz-2,hz-3,hz-4,hz-5,hz-6,hz-7,hz-8,hz-10
+  hz10:
+    image: hazelcastinstance
+    depends_on:
+      psql:
+        condition: service_healthy
+    container_name: hz-10
+    environment:
+      INSTANCES: hz-1,hz-2,hz-3,hz-4,hz-5,hz-6,hz-7,hz-8,hz-9
