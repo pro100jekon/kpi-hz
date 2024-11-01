@@ -67,7 +67,7 @@ public class DbInitializer {
     }
 
     public static Connection getConnection(String username, String password) throws SQLException {
-        var conn = DriverManager.getConnection(URL_FORMAT.formatted("host.docker.internal", "5432", DATABASE), username, password);
+        var conn = DriverManager.getConnection(URL_FORMAT.formatted("database", "5432", DATABASE), username, password);
         conn.setAutoCommit(false);
         return conn;
     }
