@@ -60,6 +60,9 @@ Optimistic concurrency control:
 | Smallest       |     987339 |
 | Range          |      37957 |
 
+В результаті оновлень колонка version отримала таке саме значення, як і counter
+![img.png](img/img2.png)
+
 # Висновки
 Найповільніший метод синхронізації - optimistic concurrency control.
 
