@@ -1,5 +1,0 @@
-package com.example.kpi;
-
-public enum TaskType {
-    LOST_UPDATE, IN_PLACE_UPDATE, ROW_LEVEL_LOCKING, OPTIMISTIC_CONCURRENCY_CONTROL
-}

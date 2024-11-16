@@ -24,11 +24,6 @@
     </properties>
     <dependencies>
         <dependency>
-            <groupId>com.hazelcast</groupId>
-            <artifactId>hazelcast</artifactId>
-            <version>5.4.0</version>
-        </dependency>
-        <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
             <version>3.14.0</version>
@@ -44,9 +39,9 @@
             <version>1.5.7</version>
         </dependency>
         <dependency>
-            <groupId>org.postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-            <version>42.7.4</version>
+            <groupId>org.neo4j.driver</groupId>
+            <artifactId>neo4j-java-driver</artifactId>
+            <version>5.26.0</version>
         </dependency>
     </dependencies>
 
@@ -70,7 +65,7 @@
                     <archive>
                         <manifest>
                             <addClasspath>true</addClasspath>
-                            <mainClass>com.example.kpi.Lab2</mainClass>
+                            <mainClass>com.example.kpi.Lab3</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

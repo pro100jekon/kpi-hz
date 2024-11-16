@@ -1,74 +1,33 @@
 package com.example.kpi;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.neo4j.driver.AuthTokens;
+import org.neo4j.driver.Driver;
+import org.neo4j.driver.GraphDatabase;
+import org.neo4j.driver.QueryConfig;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.io.Closeable;
+import java.io.IOException;
 
-public class DbInitializer {
+public class DbInitializer implements AutoCloseable {
 
-    private static final Logger log = LoggerFactory.getLogger(DbInitializer.class);
-    private static final String DATABASE = "counters";
-    private static final String TABLE = "user_counter";
-    private static final String URL_FORMAT = "jdbc:postgresql://%s:%s/%s";
+    private static final String DATABASE = "neo4j";
+    private static final String URL = "neo4j://neo4j:7687";
+    private Driver driver;
 
-    public static void init(String username, String password) {
-        try {
-            var conn = getConnection(username, password);
-            if (hasTable(conn)) {
-                resetTable(conn);
-            } else {
-                createTable(conn);
-            }
-            conn.commit();
-            conn.close();
-        } catch (SQLException e) {
-            log.error(e.getMessage());
-            System.exit(1);
-        }
+    public DbInitializer(String username, String password) {
+        var driver = GraphDatabase.driver(URL, AuthTokens.basic(username, password));
+        driver.verifyConnectivity();
+        this.driver = driver;
     }
 
-    private static boolean hasTable(Connection connection) throws SQLException {
-        try (var stmt = connection.prepareStatement(
-                "SELECT table_name FROM information_schema.tables WHERE table_schema = 'public'")) {
-            stmt.execute();
-            var rs = stmt.getResultSet();
-            var result = false;
-            while (rs.next()) {
-                if (rs.getString("table_name").equals(TABLE)) {
-                    result = true;
-                    break;
-                }
-            }
-            rs.close();
-            return result;
-        }
+    public void increment() {
+        driver.executableQuery("MATCH (item:ITEM{name:'Samsung Galaxy S24 Ultra'}) SET item.likes=item.likes+1 RETURN item")
+                .withConfig(QueryConfig.builder().withDatabase(DATABASE).build())
+                .execute();
     }
 
-    private static void createTable(Connection connection) throws SQLException {
-        try (var stmt = connection.prepareStatement("""
-                CREATE TABLE user_counter(
-                    user_id serial PRIMARY KEY,
-                    counter integer default 0,
-                    version integer default 0
-                )
-                """)) {
-            stmt.execute();
-        }
-    }
-
-    private static void resetTable(Connection connection) throws SQLException {
-        try (var stmt = connection.prepareStatement("UPDATE user_counter SET counter=0, version=0 WHERE user_id=1")) {
-            stmt.execute();
-        }
-
-    }
-
-    public static Connection getConnection(String username, String password) throws SQLException {
-        var conn = DriverManager.getConnection(URL_FORMAT.formatted("database", "5432", DATABASE), username, password);
-        conn.setAutoCommit(false);
-        return conn;
+    @Override
+    public void close() {
+        driver.close();
     }
 }
