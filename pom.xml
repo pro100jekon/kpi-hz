@@ -39,9 +39,9 @@
             <version>1.5.7</version>
         </dependency>
         <dependency>
-            <groupId>org.neo4j.driver</groupId>
-            <artifactId>neo4j-java-driver</artifactId>
-            <version>5.26.0</version>
+            <groupId>org.mongodb</groupId>
+            <artifactId>mongodb-driver-sync</artifactId>
+            <version>5.1.1</version>
         </dependency>
     </dependencies>
 
@@ -65,7 +65,7 @@
                     <archive>
                         <manifest>
                             <addClasspath>true</addClasspath>
-                            <mainClass>com.example.kpi.Lab3</mainClass>
+                            <mainClass>com.example.kpi.Lab4</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

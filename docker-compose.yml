@@ -1,86 +1,61 @@
 version: "3.8"
 services:
-  neo4j:
-    image: neo4j
+  mongodb1:
+    image: mongo
     ports:
-      - "7474:7474"
-      - "7687:7687"
-    volumes:
-      - ./neo4j/data:/data
-      - ./neo4j/logs:/logs
-    healthcheck:
-      test: wget http://localhost:7474 || exit 1
-      interval: 5s
-      timeout: 30s
-      retries: 20
-      start_period: 3s
-    environment:
-      NEO4J_AUTH: neo4j/hellothere
-      NEO4J_ACCEPT_LICENSE_AGREEMENT: yes
-      NEO4JLABS_PLUGINS: '["graph-data-science", "apoc"]'
+      - "27017:27017"
+    container_name: mongo-1
+    command: --replSet rs0 --bind_ip localhost,mongo-1
+  mongodb2:
+    image: mongo
+    ports:
+      - "27018:27017"
+    container_name: mongo-2
+    command: --replSet rs0 --bind_ip localhost,mongo-2
+  mongodb3:
+    image: mongo
+    ports:
+      - "27019:27017"
+    container_name: mongo-3
+    command: --replSet rs0 --bind_ip localhost,mongo-3
   hz1:
     build:
       context: ./
     image: hazelcastinstance
-    depends_on:
-      neo4j:
-        condition: service_healthy
     container_name: hz-1
+
   hz2:
     image: hazelcastinstance
-    depends_on:
-      neo4j:
-        condition: service_healthy
     container_name: hz-2
+
   hz3:
     image: hazelcastinstance
-    depends_on:
-      neo4j:
-        condition: service_healthy
     container_name: hz-3
+
   hz4:
     image: hazelcastinstance
-    depends_on:
-      neo4j:
-        condition: service_healthy
     container_name: hz-4
+
   hz5:
     image: hazelcastinstance
-    depends_on:
-      neo4j:
-        condition: service_healthy
     container_name: hz-5
+
   hz6:
     image: hazelcastinstance
-    depends_on:
-      neo4j:
-        condition: service_healthy
     container_name: hz-6
+
   hz7:
     image: hazelcastinstance
-    depends_on:
-      neo4j:
-        condition: service_healthy
     container_name: hz-7
+
   hz8:
     image: hazelcastinstance
-    depends_on:
-      neo4j:
-        condition: service_healthy
     container_name: hz-8
+
   hz9:
     image: hazelcastinstance
-    depends_on:
-      neo4j:
-        condition: service_healthy
     container_name: hz-9
+
   hz10:
     image: hazelcastinstance
-    depends_on:
-      neo4j:
-        condition: service_healthy
     container_name: hz-10
-
-volumes:
-  neo4j:
-    driver: local
