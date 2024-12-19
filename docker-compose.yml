@@ -1,61 +1,60 @@
 version: "3.8"
 services:
-  mongodb1:
-    image: mongo
+  cassandra1:
+    image: cassandra
     ports:
-      - "27017:27017"
-    container_name: mongo-1
-    command: --replSet rs0 --bind_ip localhost,mongo-1
-  mongodb2:
-    image: mongo
-    ports:
-      - "27018:27017"
-    container_name: mongo-2
-    command: --replSet rs0 --bind_ip localhost,mongo-2
-  mongodb3:
-    image: mongo
-    ports:
-      - "27019:27017"
-    container_name: mongo-3
-    command: --replSet rs0 --bind_ip localhost,mongo-3
+      - "9042:9042"
+    container_name: cassandra-1
+#  mongodb2:
+#    image: mongo
+#    ports:
+#      - "27018:27017"
+#    container_name: mongo-2
+#    command: --replSet rs0 --bind_ip localhost,mongo-2
+#  mongodb3:
+#    image: mongo
+#    ports:
+#      - "27019:27017"
+#    container_name: mongo-3
+#    command: --replSet rs0 --bind_ip localhost,mongo-3
   hz1:
     build:
       context: ./
     image: hazelcastinstance
     container_name: hz-1
-
-  hz2:
-    image: hazelcastinstance
-    container_name: hz-2
-
-  hz3:
-    image: hazelcastinstance
-    container_name: hz-3
-
-  hz4:
-    image: hazelcastinstance
-    container_name: hz-4
-
-  hz5:
-    image: hazelcastinstance
-    container_name: hz-5
-
-  hz6:
-    image: hazelcastinstance
-    container_name: hz-6
-
-  hz7:
-    image: hazelcastinstance
-    container_name: hz-7
-
-  hz8:
-    image: hazelcastinstance
-    container_name: hz-8
-
-  hz9:
-    image: hazelcastinstance
-    container_name: hz-9
-
-  hz10:
-    image: hazelcastinstance
-    container_name: hz-10
+#
+#  hz2:
+#    image: hazelcastinstance
+#    container_name: hz-2
+#
+#  hz3:
+#    image: hazelcastinstance
+#    container_name: hz-3
+#
+#  hz4:
+#    image: hazelcastinstance
+#    container_name: hz-4
+#
+#  hz5:
+#    image: hazelcastinstance
+#    container_name: hz-5
+#
+#  hz6:
+#    image: hazelcastinstance
+#    container_name: hz-6
+#
+#  hz7:
+#    image: hazelcastinstance
+#    container_name: hz-7
+#
+#  hz8:
+#    image: hazelcastinstance
+#    container_name: hz-8
+#
+#  hz9:
+#    image: hazelcastinstance
+#    container_name: hz-9
+#
+#  hz10:
+#    image: hazelcastinstance
+#    container_name: hz-10
