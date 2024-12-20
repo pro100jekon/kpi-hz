@@ -1,3 +1,4 @@
+# Part 1
 ### Створення простору ключів з найпростішою стратегією реплікації
 ```cassandraql
 CREATE KEYSPACE IF NOT EXISTS ecommerce
@@ -87,8 +88,8 @@ VALUES (6d0890cd-417b-4a32-9f17-7dbb9cd818d3, 'Dohn Joe',
 ```cassandraql
 DESCRIBE ecommerce.items;
 ```
-![img.png](img.png)
-![img_1.png](img_1.png)
+![img.png](img/img.png)
+![img_1.png](img/img_1.png)
 ### Напишіть запит, який виводить усі товари в певній категорії, відсортовані за ціною
 ```cassandraql
 SELECT *
@@ -96,7 +97,7 @@ FROM ecommerce.items
 WHERE category = 'mobile_phone'
 ORDER BY price DESC;
 ```
-![img_2.png](img_2.png)
+![img_2.png](img/img_2.png)
 ### Напишіть запити, які вибирають товари за різними критеріями в межах певної категорії
 #### Назва
 ```cassandraql
@@ -109,7 +110,7 @@ SELECT *
 FROM ecommerce.items
 WHERE name LIKE '%Galaxy%';
 ```
-![img_3.png](img_3.png)
+![img_3.png](img/img_3.png)
 #### Ціна (в проміжку)
 ```cassandraql
 SELECT *
@@ -118,7 +119,7 @@ WHERE category = 'mobile_phone'
   AND price >= 1000
   AND price <= 1300;
 ```
-![img_4.png](img_4.png)
+![img_4.png](img/img_4.png)
 #### Ціна та виробник
 ```cassandraql
 DROP MATERIALIZED VIEW IF EXISTS ecommerce.category_mv;
@@ -138,7 +139,7 @@ WHERE manufacturer = 'Samsung'
   AND category = 'mobile_phone'
   AND price = 1200;
 ```
-![img_5.png](img_5.png)
+![img_5.png](img/img_5.png)
 
 ### Створення таблиці замовлень
 ```cassandraql
@@ -190,20 +191,84 @@ VALUES (uuid(), 'John Doe',
 ```cassandraql
 DESCRIBE ecommerce.orders;
 ```
-![img_6.png](img_6.png)
+![img_6.png](img/img_6.png)
 ## TODO describe
 ### Для замовника виведіть всі його замовлення відсортовані за часом коли вони були зроблені
 ```cassandraql
 SELECT * FROM ecommerce.orders WHERE customer_name='John Doe' ORDER BY order_date DESC;
 ```
-![img_7.png](img_7.png)
+![img_7.png](img/img_7.png)
 ### Для кожного замовника визначте суму на яку були зроблені усі його замовлення
 ```cassandraql
 SELECT customer_name, SUM(total_amount) AS total FROM ecommerce.orders GROUP BY customer_name;
 ```
-![img_8.png](img_8.png)
+![img_8.png](img/img_8.png)
 ### Для кожного замовлення виведіть час коли його ціна була занесена в базу
 ```cassandraql
 SELECT id, WRITETIME(total_amount) FROM ecommerce.orders;
 ```
-![img_9.png](img_9.png)
+![img_9.png](img/img_9.png)
+
+# Part 2
+### Перевірити правильність конфігурації за допомогою `nodetool`
+![img_10.png](img/img_10.png)
+### Використовуючи `cqlsh` створити три Keyspace з replication factor 1,2,3 та `SimpleStrategy`
+![img_11.png](img/img_11.png)
+### В кожному з кейспейсів створити прості таблиці
+![img_12.png](img/img_12.png)
+### Спробуйте писати і читати в ці таблиці, підключаючись на різні ноди
+Query: Node 3 -> insert into keyspace 1 (2 rows)
+![img_13.png](img/img_13.png)
+Query: Node 1 -> insert into keyspace 2 (3 rows)
+![img_14.png](img/img_14.png)
+Query: Node 2 -> insert into keyspace 3 (4 rows)
+![img_15.png](img/img_15.png)
+### Вставте дані в створені таблиці і подивіться на їх розподіл по вузлах кластера для кожного з кейспейсів
+100%
+![img_16.png](img/img_16.png)
+200%
+![img_17.png](img/img_17.png)
+300%
+![img_18.png](img/img_18.png)
+### Для якогось запису з кожного кейспейсу виведіть ноди на яких зберігаються дані
+![img_19.png](img/img_19.png)
+### Відключити одну з нод
+нода 3
+![img_20.png](img/img_20.png)
+### Для кожного з кейспейсів перевірити з якими рівнями `CONSISTENCY` можна читати та писати
+
+| SELECT | CONSISTENCY ONE | CONSISTENCY TWO | CONSISTENCY THREE |
+|--------|-----------------|-----------------|-------------------|
+| repl1  | NoHostAvailable | NoHostAvailable | NoHostAvailable   |
+| repl2  | OK              | NoHostAvailable | NoHostAvailable   |
+| repl3  | OK              | OK              | NoHostAvailable   |
+
+| INSERT | CONSISTENCY ONE | CONSISTENCY TWO | CONSISTENCY THREE |
+|--------|-----------------|-----------------|-------------------|
+| repl1  | OK   (*)        | NoHostAvailable | NoHostAvailable   |
+| repl2  | OK              | NoHostAvailable | NoHostAvailable   |
+| repl3  | OK              | OK              | NoHostAvailable   |
+Приклади відповідей
+![img_22.png](img/img_22.png)
+![img_21.png](img/img_21.png)
+Після повернення ноди до кластеру запис із [таблиці 2] (помічений (\*)) був зроблений успішно
+### Зробити так, щоб три ноди працювали, але не бачили одна одну по мережі
+Було видалено ноди із мережі `*_default`
+![img_23.png](img/img_23.png)
+nodetool
+![img_24.png](img/img_24.png)
+![img_25.png](img/img_25.png)
+![img_26.png](img/img_26.png)
+### Для кейспейсу з replication factor 3 задати рівень `CONSISTENCY ONE`
+![img_27.png](img/img_27.png)
+### Створіть конфлікт у записі
+![img_28.png](img/img_28.png)
+### Відновіть зв'язок між нодами
+![img_30.png](img/img_30.png)
+Послідовність додавання == увімкнення (1 -> 2 -> 3)
+### Аналіз результату
+![img_29.png](img/img_29.png)
+Друга спроба. Послідовність додавання != увімкнення (3 -> 2 -> 1 додавання, 1 -> 3 -> 2 увімкнення)
+![img_31.png](img/img_31.png)
+![img_32.png](img/img_32.png)
+# Висновок: скоріше за все, на фінальне значення в таблиці відіграє роль час додавання запису (WRITETIME)
