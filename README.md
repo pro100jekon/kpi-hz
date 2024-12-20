@@ -192,7 +192,6 @@ VALUES (uuid(), 'John Doe',
 DESCRIBE ecommerce.orders;
 ```
 ![img_6.png](img/img_6.png)
-## TODO describe
 ### Для замовника виведіть всі його замовлення відсортовані за часом коли вони були зроблені
 ```cassandraql
 SELECT * FROM ecommerce.orders WHERE customer_name='John Doe' ORDER BY order_date DESC;
