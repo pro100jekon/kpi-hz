@@ -1,10 +1,11 @@
 version: "3.8"
 services:
   cassandra1:
-    image: cassandra
     ports:
       - "9042:9042"
     container_name: cassandra-1
+    build:
+      dockerfile: ./Dockerfile_cassandra
 #  mongodb2:
 #    image: mongo
 #    ports:
