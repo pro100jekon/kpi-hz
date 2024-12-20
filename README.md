@@ -19,9 +19,11 @@ CREATE TABLE IF NOT EXISTS ecommerce.items
 );
 CREATE TABLE IF NOT EXISTS ecommerce.orders
 (
-    id           uuid primary key,
-    items        map<uuid, int>,
-    total_amount decimal
+    order_id     uuid,
+    item_id      uuid,
+    quantity     int,
+    total_amount decimal,
+    primary key ( order_id, item_id )
 );
 ```
 ### Створення індексу для характеристик товару, що не підлягають загальній схемі
@@ -42,4 +44,13 @@ VALUES (fba322dd-6fcf-4f35-b340-adcbe81fedd8, 'iPhone 15 Pro Max', 'Apple Inc.',
 INSERT INTO ecommerce.items (id, name, manufacturer, price, category, uncategorized)
 VALUES (d4893a31-7b37-4d59-8998-0b179d89bb62, 'Lenovo Legion Pro 5 16` Intel Edition', 'Lenovo', 2500, 'laptop',
         {'Windows': 'true', 'nVidia': 'yes', 'cpu_freq_max': '5.8GHz', 'cpu_freq_min': '2.2GHz', 'weight': '2200g'});
+```
+### Додавання замовлень
+```cassandraql
+INSERT INTO ecommerce.orders (order_id, item_id, quantity, total_amount)
+VALUES (74bd7e98-e2b2-4a7c-99c4-b552033feb38, 3582e18d-3f0f-466a-8df1-2a5ede72eec0, 2, 2200);
+INSERT INTO ecommerce.orders (order_id, item_id, quantity, total_amount)
+VALUES (74bd7e98-e2b2-4a7c-99c4-b552033feb38, d4893a31-7b37-4d59-8998-0b179d89bb62, 1, 2500);
+INSERT INTO ecommerce.orders (order_id, item_id, quantity, total_amount)
+VALUES (6d0890cd-417b-4a32-9f17-7dbb9cd818d3, fba322dd-6fcf-4f35-b340-adcbe81fedd8, 5, 6750);
 ```
