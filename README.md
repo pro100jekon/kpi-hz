@@ -19,11 +19,11 @@ CREATE TABLE IF NOT EXISTS ecommerce.items
 );
 CREATE TABLE IF NOT EXISTS ecommerce.orders
 (
-    order_id     uuid,
-    item_id      uuid,
-    quantity     int,
-    total_amount decimal,
-    primary key ( order_id, item_id )
+    id            uuid primary key,
+    customer_name text,
+    order_date    timestamp,
+    items         list<tuple<uuid, int, int>>,
+    total_amount  decimal
 );
 ```
 ### Створення індексу для характеристик товару, що не підлягають загальній схемі
@@ -43,14 +43,23 @@ VALUES (fba322dd-6fcf-4f35-b340-adcbe81fedd8, 'iPhone 15 Pro Max', 'Apple Inc.',
         {'Apple': 'yes', 'iOS': 'так', 'Android': 'ні'});
 INSERT INTO ecommerce.items (id, name, manufacturer, price, category, uncategorized)
 VALUES (d4893a31-7b37-4d59-8998-0b179d89bb62, 'Lenovo Legion Pro 5 16` Intel Edition', 'Lenovo', 2500, 'laptop',
-        {'Windows': 'true', 'nVidia': 'yes', 'cpu_freq_max': '5.8GHz', 'cpu_freq_min': '2.2GHz', 'weight': '2200g'});
+        {'windows': '11', 'nvidia': '4060ti for Laptops', 'cpu_freq_max': '5.8GHz', 'cpu_freq_min': '2.2GHz', 'weight': '2200g'});
+INSERT INTO ecommerce.items (id, name, manufacturer, price, category, uncategorized)
+VALUES (8321cfcf-f341-4ec1-a7da-13beb46f2b1c, 'Samsung Galaxy Watch 6 Classic 47mm', 'Samsung', 300, 'smart_watch',
+        {'wear_os': '5.0', 'health_features': 'Heart Rate, Sleep Cycles', 'battery_capacity': '425mAh'});
 ```
 ### Додавання замовлень
 ```cassandraql
-INSERT INTO ecommerce.orders (order_id, item_id, quantity, total_amount)
-VALUES (74bd7e98-e2b2-4a7c-99c4-b552033feb38, 3582e18d-3f0f-466a-8df1-2a5ede72eec0, 2, 2200);
-INSERT INTO ecommerce.orders (order_id, item_id, quantity, total_amount)
-VALUES (74bd7e98-e2b2-4a7c-99c4-b552033feb38, d4893a31-7b37-4d59-8998-0b179d89bb62, 1, 2500);
-INSERT INTO ecommerce.orders (order_id, item_id, quantity, total_amount)
-VALUES (6d0890cd-417b-4a32-9f17-7dbb9cd818d3, fba322dd-6fcf-4f35-b340-adcbe81fedd8, 5, 6750);
+INSERT INTO ecommerce.orders (id, customer_name, items, order_date, total_amount)
+VALUES (74bd7e98-e2b2-4a7c-99c4-b552033feb38, 'John Doe',
+        [(3582e18d-3f0f-466a-8df1-2a5ede72eec0, 1150, 2), (d4893a31-7b37-4d59-8998-0b179d89bb62, 2200, 1)],
+        1734698107000, 4700);
+INSERT INTO ecommerce.orders (id, customer_name, items, order_date, total_amount)
+VALUES (6d0890cd-417b-4a32-9f17-7dbb9cd818d3, 'Dohn Joe',
+        [(fba322dd-6fcf-4f35-b340-adcbe81fedd8, 5, 6750)], 1734695107000, 6750);
 ```
+### Запит, який показує структуру створеної таблиці
+```cassandraql
+DESCRIBE ecommerce;
+```
+![img.png](img.png)
