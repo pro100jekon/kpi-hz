@@ -1,61 +1,86 @@
-version: "3.8"
 services:
   cassandra1:
     ports:
       - "9042:9042"
+      - "7000:7000"
     container_name: cassandra-1
     build:
       dockerfile: ./Dockerfile_cassandra
-#  mongodb2:
-#    image: mongo
-#    ports:
-#      - "27018:27017"
-#    container_name: mongo-2
-#    command: --replSet rs0 --bind_ip localhost,mongo-2
-#  mongodb3:
-#    image: mongo
-#    ports:
-#      - "27019:27017"
-#    container_name: mongo-3
-#    command: --replSet rs0 --bind_ip localhost,mongo-3
-  hz1:
+    environment:
+      - CASSANDRA_START_RPC=true       # default
+      - CASSANDRA_RPC_ADDRESS=0.0.0.0  # default
+      - CASSANDRA_LISTEN_ADDRESS=auto  # default, use IP addr of container # = CASSANDRA_BROADCAST_ADDRESS
+      - CASSANDRA_CLUSTER_NAME=my-cluster
+      - CASSANDRA_ENDPOINT_SNITCH=GossipingPropertyFileSnitch
+      - CASSANDRA_DC=my-datacenter-1
+    volumes:
+      - cassandra-node-1:/var/lib/cassandra:rw
+    restart:
+      on-failure
+    healthcheck:
+      test: ["CMD-SHELL", "nodetool status"]
+      interval: 2m
+      start_period: 2m
+      timeout: 10s
+      retries: 3
+
+  cassandra2:
     build:
-      context: ./
-    image: hazelcastinstance
-    container_name: hz-1
-#
-#  hz2:
-#    image: hazelcastinstance
-#    container_name: hz-2
-#
-#  hz3:
-#    image: hazelcastinstance
-#    container_name: hz-3
-#
-#  hz4:
-#    image: hazelcastinstance
-#    container_name: hz-4
-#
-#  hz5:
-#    image: hazelcastinstance
-#    container_name: hz-5
-#
-#  hz6:
-#    image: hazelcastinstance
-#    container_name: hz-6
-#
-#  hz7:
-#    image: hazelcastinstance
-#    container_name: hz-7
-#
-#  hz8:
-#    image: hazelcastinstance
-#    container_name: hz-8
-#
-#  hz9:
-#    image: hazelcastinstance
-#    container_name: hz-9
-#
-#  hz10:
-#    image: hazelcastinstance
-#    container_name: hz-10
+      dockerfile: ./Dockerfile_cassandra
+    container_name: cassandra-2
+    ports:
+      - "9043:9042"
+    environment:
+      - CASSANDRA_START_RPC=true       # default
+      - CASSANDRA_RPC_ADDRESS=0.0.0.0  # default
+      - CASSANDRA_LISTEN_ADDRESS=auto  # default, use IP addr of container # = CASSANDRA_BROADCAST_ADDRESS
+      - CASSANDRA_CLUSTER_NAME=my-cluster
+      - CASSANDRA_ENDPOINT_SNITCH=GossipingPropertyFileSnitch
+      - CASSANDRA_DC=my-datacenter-1
+      - CASSANDRA_SEEDS=cassandra-1
+    depends_on:
+      cassandra1:
+        condition: service_healthy
+    volumes:
+      - cassandra-node-2:/var/lib/cassandra:rw
+    restart:
+      on-failure
+    healthcheck:
+      test: ["CMD-SHELL", "nodetool status"]
+      interval: 2m
+      start_period: 2m
+      timeout: 10s
+      retries: 3
+
+  cassandra3:
+    build:
+      dockerfile: ./Dockerfile_cassandra
+    container_name: cassandra-3
+    ports:
+      - "9044:9042"
+    environment:
+      - CASSANDRA_START_RPC=true       # default
+      - CASSANDRA_RPC_ADDRESS=0.0.0.0  # default
+      - CASSANDRA_LISTEN_ADDRESS=auto  # default, use IP addr of container # = CASSANDRA_BROADCAST_ADDRESS
+      - CASSANDRA_CLUSTER_NAME=my-cluster
+      - CASSANDRA_ENDPOINT_SNITCH=GossipingPropertyFileSnitch
+      - CASSANDRA_DC=my-datacenter-1
+      - CASSANDRA_SEEDS=cassandra-1
+    depends_on:
+      cassandra2:
+        condition: service_healthy
+    volumes:
+      - cassandra-node-3:/var/lib/cassandra:rw
+    restart:
+      on-failure
+    healthcheck:
+      test: ["CMD-SHELL", "nodetool status"]
+      interval: 2m
+      start_period: 2m
+      timeout: 10s
+      retries: 3
+
+volumes:
+  cassandra-node-1:
+  cassandra-node-2:
+  cassandra-node-3:
