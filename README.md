@@ -248,6 +248,7 @@ Query: Node 2 -> insert into keyspace 3 (4 rows)
 | repl1  | OK   (*)        | NoHostAvailable | NoHostAvailable   |
 | repl2  | OK              | NoHostAvailable | NoHostAvailable   |
 | repl3  | OK              | OK              | NoHostAvailable   |
+
 Приклади відповідей
 ![img_22.png](img/img_22.png)
 ![img_21.png](img/img_21.png)
