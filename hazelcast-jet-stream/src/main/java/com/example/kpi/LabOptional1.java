@@ -1,6 +1,6 @@
 package com.example.kpi;
 
-public class Lab5 {
+public class LabOptional1 {
 
     public static void main(String[] args) {
 
