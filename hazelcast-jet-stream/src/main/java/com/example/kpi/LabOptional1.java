@@ -14,7 +14,6 @@ public class LabOptional1 {
                                 .addAddress("localhost:5701")));
         while (true) {
             hazelcast.getMap("RequestsCountMap").forEach(System.out::println);
-            hazelcast.getList("RequestsCountList").forEach(System.out::println);
             Thread.sleep(5000);
         }
     }
