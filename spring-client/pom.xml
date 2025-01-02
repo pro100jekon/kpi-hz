@@ -11,8 +11,8 @@
     <groupId>com.example.kpi</groupId>
     <artifactId>spring-client</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>kpi</name>
-    <description>kpi</description>
+    <name>spring-client</name>
+    <description>spring-client</description>
     <url/>
     <licenses>
         <license/>

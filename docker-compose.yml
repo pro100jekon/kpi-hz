@@ -1,0 +1,26 @@
+services:
+  web-server:
+    container_name: web-server
+    build:
+      context: ./spring-app
+    environment:
+      LOG_FILE: /apps/logs/log-today.log
+      DIR: /apps/logs
+      LOGBACK_ROLLINGPOLICY_CLEAN_HISTORY_ON_START: true
+    hostname: web-server
+    ports:
+      - "8080:8080"
+      - "5701:5701"
+  client:
+    container_name: client
+    build:
+      context: ./spring-client
+    environment:
+      URI: http://web-server:8080
+#  hz1:
+#    container_name: jet-stream-1
+#    build:
+#      dockerfile: ../Dockerfile
+#      context: ./hazelcast-jet-stream
+#    environment:
+#      APP: jet-stream

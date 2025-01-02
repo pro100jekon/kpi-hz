@@ -11,8 +11,8 @@
     <groupId>com.example.kpi</groupId>
     <artifactId>spring-app</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>kpi</name>
-    <description>kpi</description>
+    <name>spring-app</name>
+    <description>spring-app</description>
     <url/>
     <licenses>
         <license/>
@@ -59,6 +59,11 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.hazelcast</groupId>
+            <artifactId>hazelcast</artifactId>
+            <version>5.5.0</version>
         </dependency>
     </dependencies>
 

@@ -1,6 +1,7 @@
 package com.example.kpi;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
@@ -10,28 +11,31 @@ import java.util.concurrent.ThreadLocalRandom;
 @Component
 public class WebAppCaller {
 
+    final String uri;
+
     public WebAppCaller(RestClient restClient) {
         this.restClient = restClient;
+        uri = System.getenv("URI");
     }
 
     @Autowired
     RestClient restClient;
 
-    @Scheduled(fixedRate = 1000)
+    @Scheduled(fixedRate = 10)
     public void fixRate() {
         ThreadLocalRandom random = ThreadLocalRandom.current();
         switch (random.nextInt(4) % 4) {
             case 0:
-                restClient.get().uri("http://localhost:8080/get").retrieve().body(String.class);
+                restClient.get().uri(uri + "/get").retrieve().body(String.class);
                 break;
             case 1:
-                restClient.post().uri("http://localhost:8080/post").retrieve().body(String.class);
+                restClient.post().uri(uri + "/post").retrieve().body(String.class);
                 break;
             case 2:
-                restClient.options().uri("http://localhost:8080/options").retrieve().body(String.class);
+                restClient.patch().uri(uri + "/patch").retrieve().body(String.class);
                 break;
             case 3:
-                restClient.put().uri("http://localhost:8080/put").retrieve().body(String.class);
+                restClient.put().uri(uri + "/put").retrieve().body(String.class);
         }
     }
 }

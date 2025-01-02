@@ -3,16 +3,15 @@ package com.example.kpi.controller;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
-import java.util.Random;
+import java.security.SecureRandom;
 import java.util.concurrent.ThreadLocalRandom;
 
 @RestController
 public class LoggingController {
 
     private int randomness() throws InterruptedException {
-        Thread.sleep(ThreadLocalRandom.current().nextInt(2000));
-        switch (new Random().nextInt(5)) {
+        Thread.sleep(ThreadLocalRandom.current().nextInt(2));
+        switch (new SecureRandom().nextInt(10)) {
             case 1 -> {
                 return 204;
             }
@@ -41,9 +40,9 @@ public class LoggingController {
         return ResponseEntity.status(randomness()).body("put");
     }
 
-    @RequestMapping(method = RequestMethod.OPTIONS, value = "options")
-    public ResponseEntity<String> options() throws InterruptedException {
-        return ResponseEntity.status(randomness()).body("options");
+    @PatchMapping("patch")
+    public ResponseEntity<String> patch() throws InterruptedException {
+        return ResponseEntity.status(randomness()).body("patch");
     }
 
     @PostMapping("post")
