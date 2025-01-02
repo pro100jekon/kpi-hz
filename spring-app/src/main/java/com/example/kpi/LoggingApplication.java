@@ -1,5 +1,9 @@
-import org.springframework.boot.SpringApplication;
+package com.example.kpi;
 
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
 public class LoggingApplication {
 
     public static void main(String[] args) {

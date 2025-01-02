@@ -5,6 +5,7 @@
     <modules>
         <module>hazelcast-jet-stream</module>
         <module>spring-app</module>
+        <module>spring-client</module>
     </modules>
     <packaging>pom</packaging>
     <groupId>com.example.kpi</groupId>
