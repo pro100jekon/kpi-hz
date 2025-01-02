@@ -1,3 +1,4 @@
 logging:
   level:
-    root: debug
+    org.springframework.web.client.RestClient: debug
+    com.example.kpi: debug

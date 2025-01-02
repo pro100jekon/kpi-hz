@@ -21,6 +21,6 @@ public class LoggerFilter extends OncePerRequestFilter {
         long startTime = System.currentTimeMillis();
         filterChain.doFilter(request, response);
         long endTime = System.currentTimeMillis() - startTime;
-        logger.info("Processed request for {} {} in {} ms. HTTP Status code: {}", request.getMethod(), request.getRequestURI(), endTime, response.getStatus());
+        logger.debug("Processed request for {} {} in {} ms. HTTP Status code: {}", request.getMethod(), request.getRequestURI(), endTime, response.getStatus());
     }
 }
